@@ -1,0 +1,3 @@
+comment = 'Generic table auditing'
+default_version = '0.1.0'
+relocatable = false
