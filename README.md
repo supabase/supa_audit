@@ -14,3 +14,20 @@
 ---
 
 Generic table auditing
+
+
+## Test
+
+### Run the tests
+
+```sh
+nix-shell --run "pg_13_supa_audit make installcheck"
+```
+
+### Adding tests
+
+Tests are located in `test/sql/` and the expected output is in `test/expected/`
+
+The output of the most recent test run is stored in `results/`.
+
+When the outputs for a test in `results/` is correct, copy it to `test/expected/` and the test will pass.
