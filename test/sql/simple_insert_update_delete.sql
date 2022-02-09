@@ -12,6 +12,12 @@ create trigger t
 insert into public.members(id, name)
 values (1, 'foo');
 
+update public.members
+    set name = 'bar'
+    where id = 1;
+
+delete from public.members;
+
 select
     id,
     record_id,

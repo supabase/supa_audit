@@ -1,0 +1,31 @@
+create table public.members(
+    id int primary key,
+    name text not null
+);
+create trigger t
+    before insert or update or delete
+    on public.members
+    for each row
+    execute procedure audit.change_trigger();
+insert into public.members(id, name)
+values (1, 'foo');
+update public.members
+    set name = 'bar'
+    where id = 1;
+delete from public.members;
+select
+    id,
+    record_id,
+    old_record_id,
+    op,
+    entity_oid::regclass,
+    record
+from
+    audit.record_version_history;
+ id |              record_id               |            old_record_id             |   op   | entity_oid |          record          
+----+--------------------------------------+--------------------------------------+--------+------------+--------------------------
+  1 | dd76759f-e596-510c-80a6-209bb6ee0d7d |                                      | INSERT | members    | {"id": 1, "name": "foo"}
+  2 | dd76759f-e596-510c-80a6-209bb6ee0d7d | dd76759f-e596-510c-80a6-209bb6ee0d7d | UPDATE | members    | {"id": 1, "name": "bar"}
+  3 | dd76759f-e596-510c-80a6-209bb6ee0d7d | dd76759f-e596-510c-80a6-209bb6ee0d7d | DELETE | members    | 
+(3 rows)
+
