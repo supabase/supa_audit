@@ -12,7 +12,9 @@
 
 ---
 
-Generic table auditing
+The `supa_audit` PostgreSQL extension is a generic solution for tracking changes to tables' data over time.
+
+The audit table, `audit.record_version`, leverages each records primary key values to produce a stable `record_id::uuid`, enabling efficient (linear time) history queries.
 
 
 ## Usage
