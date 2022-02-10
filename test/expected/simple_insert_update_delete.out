@@ -1,33 +1,36 @@
-create table public.members(
-    id int primary key,
-    name text not null
-);
-create trigger t
-    before insert or update or delete
-    on public.members
-    for each row
-    execute procedure audit.insert_update_delete_trigger();
-insert into public.members(id, name)
-values (1, 'foo');
-update public.members
-    set name = 'bar'
-    where id = 1;
-delete from public.members;
-select
-    id,
-    record_id,
-    old_record_id,
-    op,
-    table_oid,
-    table_schema,
-    table_name,
-    record
-from
-    audit.record_version;
+begin;
+    create table public.members(
+        id int primary key,
+        name text not null
+    );
+    select audit.enable_tracking('public.members');
+ enable_tracking 
+-----------------
+ 
+(1 row)
+
+    insert into public.members(id, name)
+    values (1, 'foo');
+    update public.members
+        set name = 'bar'
+        where id = 1;
+    delete from public.members;
+    select
+        id,
+        record_id,
+        old_record_id,
+        op,
+        table_oid,
+        table_schema,
+        table_name,
+        record
+    from
+        audit.record_version;
  id |              record_id               |            old_record_id             |   op   | table_oid | table_schema | table_name |          record          
 ----+--------------------------------------+--------------------------------------+--------+-----------+--------------+------------+--------------------------
-  1 | 12013ea2-4e1e-57c5-afd2-b77a3a573940 |                                      | INSERT |     16427 | public       | members    | {"id": 1, "name": "foo"}
-  2 | 12013ea2-4e1e-57c5-afd2-b77a3a573940 | 12013ea2-4e1e-57c5-afd2-b77a3a573940 | UPDATE |     16427 | public       | members    | {"id": 1, "name": "bar"}
-  3 |                                      | 12013ea2-4e1e-57c5-afd2-b77a3a573940 | DELETE |     16427 | public       | members    | 
+  2 | 47b9cff8-8393-5406-9160-a5d193ea31f1 |                                      | INSERT |     16447 | public       | members    | {"id": 1, "name": "foo"}
+  3 | 47b9cff8-8393-5406-9160-a5d193ea31f1 | 47b9cff8-8393-5406-9160-a5d193ea31f1 | UPDATE |     16447 | public       | members    | {"id": 1, "name": "bar"}
+  4 |                                      | 47b9cff8-8393-5406-9160-a5d193ea31f1 | DELETE |     16447 | public       | members    | 
 (3 rows)
 
+rollback;
