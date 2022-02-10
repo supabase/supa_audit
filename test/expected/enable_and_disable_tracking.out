@@ -26,15 +26,14 @@ begin;
         record_id,
         old_record_id,
         op,
-        table_oid,
         table_schema,
         table_name,
         record
     from
         audit.record_version;
- id |              record_id               | old_record_id |   op   | table_oid | table_schema | table_name |  record   
-----+--------------------------------------+---------------+--------+-----------+--------------+------------+-----------
-  1 | 37b2aa76-3651-543c-996c-9bb351951e7e |               | INSERT |     16435 | public       | dummy      | {"id": 2}
+ id |              record_id               | old_record_id |   op   | table_schema | table_name |  record   
+----+--------------------------------------+---------------+--------+--------------+------------+-----------
+  1 | 37b2aa76-3651-543c-996c-9bb351951e7e |               | INSERT | public       | dummy      | {"id": 2}
 (1 row)
 
 rollback;
