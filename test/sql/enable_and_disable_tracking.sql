@@ -41,7 +41,8 @@ begin;
         op,
         table_schema,
         table_name,
-        record
+        record,
+        old_record
     from
         audit.record_version arv
         left join remap r

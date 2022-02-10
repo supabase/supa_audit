@@ -40,15 +40,19 @@ create table audit.record_version(
     table_name     name not null,
     -- contents of the record
     record         json,
+    -- previous record contents for UPDATE/DELETE
+    old_record     json,
 
     -- at least one of record_id and old_record id is populated, except for trucnates
     check (coalesce(record_id, old_record_id) is not null or op = 'TRUNCATE'),
 
     -- record_id must be populated for insert and update
     check (op in ('INSERT', 'UPDATE') = (record_id is not null)),
+    check (op in ('INSERT', 'UPDATE') = (record is not null)),
 
     -- old_record must be populated for update and delete
-    check (op in ('UPDATE', 'DELETE') = (old_record_id is not null))
+    check (op in ('UPDATE', 'DELETE') = (old_record_id is not null)),
+    check (op in ('UPDATE', 'DELETE') = (old_record is not null))
 );
 
 
@@ -130,7 +134,8 @@ begin
         table_oid,
         table_schema,
         table_name,
-        record
+        record,
+        old_record
     )
     select
         record_id,
@@ -139,7 +144,8 @@ begin
         TG_RELID,
         TG_TABLE_SCHEMA,
         TG_TABLE_NAME,
-        record_jsonb;
+        record_jsonb,
+        old_record_jsonb;
 
     return coalesce(old, new);
 end;

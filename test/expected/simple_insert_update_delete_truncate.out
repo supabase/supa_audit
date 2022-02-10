@@ -33,19 +33,20 @@ begin;
         op,
         table_schema,
         table_name,
-        record
+        record,
+        old_record
     from
         audit.record_version arv
         left join remap r
             on arv.record_id = r.id
         left join remap ro
             on arv.old_record_id = ro.id;
- id | remapped_record_id | remapped_old_record_id |    op    | table_schema | table_name |          record          
-----+--------------------+------------------------+----------+--------------+------------+--------------------------
-  2 |                  3 |                        | INSERT   | public       | members    | {"id": 1, "name": "foo"}
-  3 |                  3 |                      3 | UPDATE   | public       | members    | {"id": 1, "name": "bar"}
-  4 |                    |                      3 | DELETE   | public       | members    | 
-  5 |                    |                        | TRUNCATE | public       | members    | 
+ id | remapped_record_id | remapped_old_record_id |    op    | table_schema | table_name |          record          |        old_record        
+----+--------------------+------------------------+----------+--------------+------------+--------------------------+--------------------------
+  2 |                  3 |                        | INSERT   | public       | members    | {"id": 1, "name": "foo"} | 
+  3 |                  3 |                      3 | UPDATE   | public       | members    | {"id": 1, "name": "bar"} | {"id": 1, "name": "foo"}
+  4 |                    |                      3 | DELETE   | public       | members    |                          | {"id": 1, "name": "foo"}
+  5 |                    |                        | TRUNCATE | public       | members    |                          | 
 (4 rows)
 
 rollback;
