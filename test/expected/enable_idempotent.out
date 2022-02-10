@@ -14,12 +14,12 @@ begin;
  
 (1 row)
 
-    select *
+    select tgname
     from pg_trigger
     where tgrelid = 'public.dummy'::regclass;
-  oid  | tgrelid | tgparentid |   tgname    | tgfoid | tgtype | tgenabled | tgisinternal | tgconstrrelid | tgconstrindid | tgconstraint | tgdeferrable | tginitdeferred | tgnargs | tgattr | tgargs | tgqual | tgoldtable | tgnewtable 
--------+---------+------------+-------------+--------+--------+-----------+--------------+---------------+---------------+--------------+--------------+----------------+---------+--------+--------+--------+------------+------------
- 16446 |   16441 |          0 | audit_i_u_d |  16426 |     31 | O         | f            |             0 |             0 |            0 | f            | f              |       0 |        | \x     |        |            | 
+   tgname    
+-------------
+ audit_i_u_d
 (1 row)
 
 rollback;

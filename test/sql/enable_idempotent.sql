@@ -9,7 +9,7 @@ begin;
     select audit.enable_tracking('public.dummy');
 
 
-    select *
+    select tgname
     from pg_trigger
     where tgrelid = 'public.dummy'::regclass;
 

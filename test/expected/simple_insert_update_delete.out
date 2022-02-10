@@ -15,21 +15,35 @@ begin;
         set name = 'bar'
         where id = 1;
     delete from public.members;
+    with remap as (
+        select distinct on (u.id)
+            u.id,
+            row_number() over () stable_id
+        from
+            audit.record_version arv,
+            unnest(array[arv.record_id, arv.old_record_id]) u(id)
+        order by
+            u.id asc
+    )
     select
-        id,
-        record_id,
-        old_record_id,
+        arv.id,
+        r.stable_id as remapped_record_id,
+        ro.stable_id as remapped_old_record_id,
         op,
         table_schema,
         table_name,
         record
     from
-        audit.record_version;
- id |              record_id               |            old_record_id             |   op   | table_schema | table_name |          record          
-----+--------------------------------------+--------------------------------------+--------+--------------+------------+--------------------------
-  2 | 13979db9-fa66-54eb-87eb-10ff957d6a63 |                                      | INSERT | public       | members    | {"id": 1, "name": "foo"}
-  3 | 13979db9-fa66-54eb-87eb-10ff957d6a63 | 13979db9-fa66-54eb-87eb-10ff957d6a63 | UPDATE | public       | members    | {"id": 1, "name": "bar"}
-  4 |                                      | 13979db9-fa66-54eb-87eb-10ff957d6a63 | DELETE | public       | members    | 
+        audit.record_version arv
+        left join remap r
+            on arv.record_id = r.id
+        left join remap ro
+            on arv.old_record_id = ro.id;
+ id | remapped_record_id | remapped_old_record_id |   op   | table_schema | table_name |          record          
+----+--------------------+------------------------+--------+--------------+------------+--------------------------
+  2 |                  1 |                        | INSERT | public       | members    | {"id": 1, "name": "foo"}
+  3 |                  1 |                      1 | UPDATE | public       | members    | {"id": 1, "name": "bar"}
+  4 |                    |                      1 | DELETE | public       | members    | 
 (3 rows)
 
 rollback;
