@@ -7,7 +7,7 @@ create trigger t
     before insert or update or delete
     on public.members
     for each row
-    execute procedure audit.change_trigger();
+    execute procedure audit.insert_update_delete_trigger();
 
 insert into public.members(id, name)
 values (1, 'foo');
@@ -23,7 +23,9 @@ select
     record_id,
     old_record_id,
     op,
-    entity_oid::regclass,
+    table_oid,
+    table_schema,
+    table_name,
     record
 from
-    audit.record_version_history;
+    audit.record_version;
