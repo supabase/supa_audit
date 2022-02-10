@@ -16,6 +16,7 @@ begin;
 
     select audit.disable_tracking('public.dummy');
 NOTICE:  trigger "audit_i_u_d" for relation "dummy" does not exist, skipping
+NOTICE:  trigger "audit_t" for relation "dummy" does not exist, skipping
  disable_tracking 
 ------------------
  

@@ -146,6 +146,28 @@ end;
 $$;
 
 
+create or replace function audit.truncate_trigger()
+    returns trigger
+    security definer
+    language plpgsql
+as $$
+begin
+    insert into audit.record_version(
+        op,
+        table_oid,
+        table_schema,
+        table_name
+    )
+    select
+        TG_OP::audit.operation,
+        TG_RELID,
+        TG_TABLE_SCHEMA,
+        TG_TABLE_NAME;
+
+    return coalesce(old, new);
+end;
+$$;
+
 
 create or replace function audit.enable_tracking(regclass)
     returns void
@@ -162,6 +184,16 @@ declare
             execute procedure audit.insert_update_delete_trigger();',
         $1
     );
+
+    statement_stmt text = format('
+        create trigger audit_t
+            before truncate
+            on %I
+            for each statement
+            execute procedure audit.truncate_trigger();',
+        $1
+    );
+
     pkey_cols text[] = audit.primary_key_columns($1);
 begin
     if pkey_cols = array[]::text[] then
@@ -170,6 +202,10 @@ begin
 
     if not exists(select 1 from pg_trigger where tgrelid = $1 and tgname = 'audit_i_u_d') then
         execute statement_row;
+    end if;
+
+    if not exists(select 1 from pg_trigger where tgrelid = $1 and tgname = 'audit_t') then
+        execute statement_stmt;
     end if;
 end;
 $$;
@@ -186,7 +222,13 @@ declare
         'drop trigger if exists audit_i_u_d on %I;',
         $1
     );
+
+    statement_stmt text = format(
+        'drop trigger if exists audit_t on %I;',
+        $1
+    );
 begin
     execute statement_row;
+    execute statement_stmt;
 end;
 $$;

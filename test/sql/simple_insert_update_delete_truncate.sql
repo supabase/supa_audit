@@ -16,6 +16,7 @@ begin;
 
     delete from public.members;
 
+    truncate table public.members;
 
     with remap as (
         select distinct on (u.id)

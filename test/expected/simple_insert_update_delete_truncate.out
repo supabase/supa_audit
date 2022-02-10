@@ -15,6 +15,7 @@ begin;
         set name = 'bar'
         where id = 1;
     delete from public.members;
+    truncate table public.members;
     with remap as (
         select distinct on (u.id)
             u.id,
@@ -39,11 +40,12 @@ begin;
             on arv.record_id = r.id
         left join remap ro
             on arv.old_record_id = ro.id;
- id | remapped_record_id | remapped_old_record_id |   op   | table_schema | table_name |          record          
-----+--------------------+------------------------+--------+--------------+------------+--------------------------
-  2 |                  1 |                        | INSERT | public       | members    | {"id": 1, "name": "foo"}
-  3 |                  1 |                      1 | UPDATE | public       | members    | {"id": 1, "name": "bar"}
-  4 |                    |                      1 | DELETE | public       | members    | 
-(3 rows)
+ id | remapped_record_id | remapped_old_record_id |    op    | table_schema | table_name |          record          
+----+--------------------+------------------------+----------+--------------+------------+--------------------------
+  2 |                  3 |                        | INSERT   | public       | members    | {"id": 1, "name": "foo"}
+  3 |                  3 |                      3 | UPDATE   | public       | members    | {"id": 1, "name": "bar"}
+  4 |                    |                      3 | DELETE   | public       | members    | 
+  5 |                    |                        | TRUNCATE | public       | members    | 
+(4 rows)
 
 rollback;

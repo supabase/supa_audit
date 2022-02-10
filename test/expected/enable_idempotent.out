@@ -20,6 +20,7 @@ begin;
    tgname    
 -------------
  audit_i_u_d
-(1 row)
+ audit_t
+(2 rows)
 
 rollback;
