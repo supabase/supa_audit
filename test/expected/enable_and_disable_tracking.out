@@ -1,0 +1,40 @@
+begin;
+    create table public.dummy(
+        id int primary key
+    );
+    insert into public.dummy(id)
+    values (1);
+    select audit.enable_tracking('public.dummy');
+ enable_tracking 
+-----------------
+ 
+(1 row)
+
+    insert into public.dummy(id)
+    values (2);
+    select audit.disable_tracking('public.dummy');
+ disable_tracking 
+------------------
+ 
+(1 row)
+
+    insert into public.dummy(id)
+    values (3);
+    -- Only record with id = 2 should be present
+    select
+        id,
+        record_id,
+        old_record_id,
+        op,
+        table_oid,
+        table_schema,
+        table_name,
+        record
+    from
+        audit.record_version;
+ id |              record_id               | old_record_id |   op   | table_oid | table_schema | table_name |  record   
+----+--------------------------------------+---------------+--------+-----------+--------------+------------+-----------
+  1 | 37b2aa76-3651-543c-996c-9bb351951e7e |               | INSERT |     16435 | public       | dummy      | {"id": 2}
+(1 row)
+
+rollback;
