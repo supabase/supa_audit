@@ -68,13 +68,13 @@ select audit.disable_tracking('public.account'::regclass);
 
 ## Test
 
-### Run the tests
+### Run the Tests
 
 ```sh
 nix-shell --run "pg_13_supa_audit make installcheck"
 ```
 
-### Adding tests
+### Adding Tests
 
 Tests are located in `test/sql/` and the expected output is in `test/expected/`
 
@@ -90,6 +90,22 @@ nix-shell --run "pg_13_supa_audit psql"
 
 ## Performance
 
+
+### Write Throughput
 Auditing tables reduces throughput of inserts, updates, and deletes.
 
 It is not reccomended to enable tracking on tables with a peak write throughput over 3k ops/second.
+
+
+### Querying
+
+When querying a table's history, filter on the indexed `table_oid` rather than the `table_name` and `schema_name` columns.
+
+```sql
+select
+    *
+from
+    audit.record_version
+where
+    table_oid = 'public.account'::regclass::oid;
+```

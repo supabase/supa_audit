@@ -56,7 +56,6 @@ create table audit.record_version(
 );
 
 
-
 create index record_version_record_id
     on audit.record_version(record_id)
     where record_id is not null;
@@ -65,6 +64,15 @@ create index record_version_record_id
 create index record_version_old_record_id
     on audit.record_version(record_id)
     where old_record_id is not null;
+
+
+create index record_version_ts
+    on audit.record_version
+    using brin(ts);
+
+
+create index record_version_table_oid
+    on audit.record_version(table_oid);
 
 
 create or replace function audit.primary_key_columns(entity_oid oid)
