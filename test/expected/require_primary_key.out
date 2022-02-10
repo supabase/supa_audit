@@ -1,0 +1,12 @@
+begin;
+    -- prevent exceptions from failing the test
+    set client_min_messages to error;
+    set log_min_messages to panic;
+    create table public.dummy(
+        id int
+    );
+    -- Should raise exception that there is no primary key
+    select audit.enable_tracking('public.dummy');
+ERROR:  Table dummy can not be audited because it has no primary key
+CONTEXT:  PL/pgSQL function audit.enable_tracking(regclass) line 14 at RAISE
+rollback;

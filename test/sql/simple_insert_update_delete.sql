@@ -21,7 +21,6 @@ begin;
         record_id,
         old_record_id,
         op,
-        table_oid,
         table_schema,
         table_name,
         record

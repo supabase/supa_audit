@@ -20,17 +20,16 @@ begin;
         record_id,
         old_record_id,
         op,
-        table_oid,
         table_schema,
         table_name,
         record
     from
         audit.record_version;
- id |              record_id               |            old_record_id             |   op   | table_oid | table_schema | table_name |          record          
-----+--------------------------------------+--------------------------------------+--------+-----------+--------------+------------+--------------------------
-  2 | 47b9cff8-8393-5406-9160-a5d193ea31f1 |                                      | INSERT |     16447 | public       | members    | {"id": 1, "name": "foo"}
-  3 | 47b9cff8-8393-5406-9160-a5d193ea31f1 | 47b9cff8-8393-5406-9160-a5d193ea31f1 | UPDATE |     16447 | public       | members    | {"id": 1, "name": "bar"}
-  4 |                                      | 47b9cff8-8393-5406-9160-a5d193ea31f1 | DELETE |     16447 | public       | members    | 
+ id |              record_id               |            old_record_id             |   op   | table_schema | table_name |          record          
+----+--------------------------------------+--------------------------------------+--------+--------------+------------+--------------------------
+  2 | 13979db9-fa66-54eb-87eb-10ff957d6a63 |                                      | INSERT | public       | members    | {"id": 1, "name": "foo"}
+  3 | 13979db9-fa66-54eb-87eb-10ff957d6a63 | 13979db9-fa66-54eb-87eb-10ff957d6a63 | UPDATE | public       | members    | {"id": 1, "name": "bar"}
+  4 |                                      | 13979db9-fa66-54eb-87eb-10ff957d6a63 | DELETE | public       | members    | 
 (3 rows)
 
 rollback;
