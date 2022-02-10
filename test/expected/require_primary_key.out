@@ -1,0 +1,9 @@
+begin;
+    create table public.dummy(
+        id int
+    );
+    -- Should raise exception that there is no primary key
+    select audit.enable_tracking('public.dummy');
+ERROR:  Table dummy can not be audited because it has no primary key
+CONTEXT:  PL/pgSQL function audit.enable_tracking(regclass) line 14 at RAISE
+rollback;
