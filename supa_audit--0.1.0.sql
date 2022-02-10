@@ -52,6 +52,7 @@ create table audit.record_version(
 );
 
 
+
 create index record_version_record_id
     on audit.record_version(record_id)
     where record_id is not null;
@@ -91,12 +92,19 @@ create or replace function audit.to_record_id(entity_oid oid, pkey_cols text[], 
     language sql
 as $$
     select
-        uuid_generate_v5(
-            'fd62bc3d-8d6e-43c2-919c-802ba3762271',
-            ( jsonb_build_array(to_jsonb($1)) || jsonb_agg($3 ->> key_) )::text
-        )
-    from
-        unnest($2) x(key_)
+        case
+            when rec is null then null
+            when pkey_cols = array[]::text[] then uuid_generate_v4()
+            else (
+                select
+                    uuid_generate_v5(
+                        'fd62bc3d-8d6e-43c2-919c-802ba3762271',
+                        ( jsonb_build_array(to_jsonb($1)) || jsonb_agg($3 ->> key_) )::text
+                    )
+                from
+                    unnest($2) x(key_)
+            )
+        end
 $$;
 
 
@@ -107,8 +115,12 @@ create or replace function audit.insert_update_delete_trigger()
 as $$
 declare
     pkey_cols text[] = audit.primary_key_columns(TG_RELID);
+
     record_jsonb jsonb = to_jsonb(new);
+    record_id uuid = audit.to_record_id(TG_RELID, pkey_cols, record_jsonb);
+
     old_record_jsonb jsonb = to_jsonb(old);
+    old_record_id uuid = audit.to_record_id(TG_RELID, pkey_cols, old_record_jsonb);
 begin
 
     insert into audit.record_version(
@@ -121,16 +133,8 @@ begin
         record
     )
     select
-        case
-            when new is null then null
-            when pkey_cols = array[]::text[] then null
-            else audit.to_record_id(TG_RELID, pkey_cols, record_jsonb)
-        end as record_id,
-        case
-            when old is null then null
-            when pkey_cols = array[]::text[] then null
-            else audit.to_record_id(TG_RELID, pkey_cols, old_record_jsonb)
-        end as old_record_id,
+        record_id,
+        old_record_id,
         TG_OP::audit.operation,
         TG_RELID,
         TG_TABLE_SCHEMA,
