@@ -78,6 +78,7 @@ create index record_version_table_oid
 create or replace function audit.primary_key_columns(entity_oid oid)
     returns text[]
     stable
+    security definer
     language sql
 as $$
     -- Looks up the names of a table's primary key columns
