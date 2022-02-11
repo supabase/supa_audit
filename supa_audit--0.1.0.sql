@@ -38,6 +38,7 @@ create table audit.record_version(
     table_oid      int not null,
     table_schema   name not null,
     table_name     name not null,
+
     -- contents of the record
     record         json,
     -- previous record contents for UPDATE/DELETE
@@ -54,6 +55,34 @@ create table audit.record_version(
     check (op in ('UPDATE', 'DELETE') = (old_record_id is not null)),
     check (op in ('UPDATE', 'DELETE') = (old_record is not null))
 );
+
+do $$
+    begin
+        -- Detect if we're in a supabase project
+        -- Ensure `auth.uid() -> uuid` and `auth.role() -> text` exist
+        if (
+            select
+                count(distinct f.proname) = 2
+            from
+                pg_proc f
+                join pg_namespace nsp
+                    on f.pronamespace = nsp.oid
+                join pg_type pt
+                    on f.prorettype = pt.oid
+            where
+                (nsp.nspname, f.proname, pt.typname) in (
+                    ('auth', 'uid',  'uuid'),
+                    ('auth', 'role', 'text')
+                )
+                and f.pronargs = 0
+            )
+            then
+
+            alter table audit.record_version add column auth_uid  uuid default (auth.uid());
+            alter table audit.record_version add column auth_role text default (auth.role());
+        end if;
+    end
+$$;
 
 
 create index record_version_record_id
