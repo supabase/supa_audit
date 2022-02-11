@@ -1,0 +1,39 @@
+begin;
+    drop extension supa_audit;
+    create schema auth;
+    create function auth.uid()
+        returns uuid
+        language sql
+    as $$ select '76f99606-1b3f-41d1-806d-358b34db3b32'::uuid $$;
+    create function auth.role()
+        returns text
+        language sql
+    as $$ select 'anon' $$;
+    create extension supa_audit;
+    -- Check that the supabase auth_uid and auth_role columns are present
+    select * from audit.record_version;
+ id | record_id | old_record_id | op | ts | table_oid | table_schema | table_name | record | old_record | auth_uid | auth_role 
+----+-----------+---------------+----+----+-----------+--------------+------------+--------+------------+----------+-----------
+(0 rows)
+
+    create table public.xyz(id int primary key);
+    select audit.enable_tracking('public.xyz'::regclass);
+ enable_tracking 
+-----------------
+ 
+(1 row)
+
+    insert into public.xyz(id) values(1);
+    -- Check that defaults populate
+    select
+        op,
+        auth_uid,
+        auth_role
+    from
+        audit.record_version;
+   op   |               auth_uid               | auth_role 
+--------+--------------------------------------+-----------
+ INSERT | 76f99606-1b3f-41d1-806d-358b34db3b32 | anon
+(1 row)
+
+rollback;
