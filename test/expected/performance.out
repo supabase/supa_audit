@@ -35,10 +35,11 @@ begin;
     $$;
     /*
         Operations on a 2020 Macbook Pro M1 Max: 13,700.
-            The following asserts a much lower threshold of 3,000
-            as a smoke test for significant performance regressions.
+            The following asserts a much lower threshold of 1,000
+            as a smoke test for significant performance regressions
+            on underpowered CI.
     */
-    select public.benchmark('250 milliseconds') * 4 > 3000;
+    select public.benchmark('250 milliseconds') * 4 > 1000;
  ?column? 
 ----------
  t
