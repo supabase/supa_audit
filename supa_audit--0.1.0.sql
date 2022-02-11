@@ -155,7 +155,7 @@ begin
         record_jsonb,
         old_record_jsonb;
 
-    return coalesce(old, new);
+    return coalesce(new, old);
 end;
 $$;
 

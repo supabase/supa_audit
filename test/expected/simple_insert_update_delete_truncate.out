@@ -45,7 +45,7 @@ begin;
 ----+--------------------+------------------------+----------+--------------+------------+--------------------------+--------------------------
   2 |                  3 |                        | INSERT   | public       | members    | {"id": 1, "name": "foo"} | 
   3 |                  3 |                      3 | UPDATE   | public       | members    | {"id": 1, "name": "bar"} | {"id": 1, "name": "foo"}
-  4 |                    |                      3 | DELETE   | public       | members    |                          | {"id": 1, "name": "foo"}
+  4 |                    |                      3 | DELETE   | public       | members    |                          | {"id": 1, "name": "bar"}
   5 |                    |                        | TRUNCATE | public       | members    |                          | 
 (4 rows)
 

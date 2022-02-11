@@ -57,7 +57,7 @@ from
 ----+--------------------------------------+--------------------------------------+----------+---------------------------------+-----------+--------------+------------+----------------------------------------+------------------------------------
   1 | 57ca384e-f24c-5af5-b361-a057aeac506c |                                      | INSERT   | Thu Feb 10 17:02:25.621095 2022 |     16439 | public       | account    | {"id": 1, "name": "Foo Barsworth"}     |
   2 | 57ca384e-f24c-5af5-b361-a057aeac506c | 57ca384e-f24c-5af5-b361-a057aeac506c | UPDATE   | Thu Feb 10 17:02:25.622151 2022 |     16439 | public       | account    | {"id": 1, "name": "Foo Barsworht III"} | {"id": 1, "name": "Foo Barsworth"}
-  3 |                                      | 57ca384e-f24c-5af5-b361-a057aeac506c | DELETE   | Thu Feb 10 17:02:25.622495 2022 |     16439 | public       | account    |                                        | {"id": 1, "name": "Foo Barsworth"}
+  3 |                                      | 57ca384e-f24c-5af5-b361-a057aeac506c | DELETE   | Thu Feb 10 17:02:25.622495 2022 |     16439 | public       | account    |                                        | {"id": 1, "name": "Foo Barsworth III"}
   4 |                                      |                                      | TRUNCATE | Thu Feb 10 17:02:25.622779 2022 |     16439 | public       | account    |                                        |
 (4 rows)
 */
