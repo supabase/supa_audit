@@ -34,15 +34,15 @@ create table audit.record_version(
     old_record_id  uuid,
     -- INSERT/UPDATE/DELETE/TRUNCATE/SNAPSHOT
     op             audit.operation not null,
-    ts             timestamp not null default (now() at time zone 'utc'),
-    table_oid      int not null,
+    ts             timestamptz not null default (now() at time zone 'utc'),
+    table_oid      oid not null,
     table_schema   name not null,
     table_name     name not null,
 
     -- contents of the record
-    record         json,
+    record         jsonb,
     -- previous record contents for UPDATE/DELETE
-    old_record     json,
+    old_record     jsonb,
 
     -- at least one of record_id and old_record id is populated, except for trucnates
     check (coalesce(record_id, old_record_id) is not null or op = 'TRUNCATE'),
