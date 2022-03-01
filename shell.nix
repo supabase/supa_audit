@@ -8,8 +8,8 @@ mkShell {
   buildInputs =
     let
       pgWithExt = { pg }: pg.withPackages (p: [ (callPackage ./nix/supa_audit { postgresql = pg; }) ]);
-      pg13WithExt = pgWithExt { pg = postgresql_13; };
-      pg_w_supa_audit = callPackage ./nix/supa_audit/pgScript.nix { postgresql = pg13WithExt; };
+      pg14WithExt = pgWithExt { pg = postgresql_14; };
+      pg_w_supa_audit = callPackage ./nix/supa_audit/pgScript.nix { postgresql = pg14WithExt; };
     in
     [ pg_w_supa_audit ];
 }
