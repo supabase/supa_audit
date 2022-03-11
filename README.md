@@ -20,7 +20,7 @@ The audit table, `audit.record_version`, leverages each records primary key valu
 ## Usage
 
 ```sql
-create extension supa_audit;
+create extension supa_audit cascade;
 
 create table public.account(
     id int primary key,
