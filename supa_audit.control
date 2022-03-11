@@ -1,3 +1,4 @@
 comment = 'Generic table auditing'
 default_version = '0.2.1'
 relocatable = false
+requires = uuid-ossp
