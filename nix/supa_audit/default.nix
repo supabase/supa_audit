@@ -8,8 +8,7 @@ stdenv.mkDerivation {
   src = ../../.;
 
   installPhase = ''
-    install -D -t $out/share/postgresql/extension supa_audit--0.2.0.sql
-    install -D -t $out/share/postgresql/extension supa_audit--0.1.0--0.2.0.sql
-    install -D -t $out/share/postgresql/extension supa_audit.control
+    install -D -t $out/share/postgresql/extension *.sql
+    install -D -t $out/share/postgresql/extension *.control
   '';
 }
