@@ -1,0 +1,21 @@
+begin;
+    -- Check escaping rules for schemas not on the search path
+    -- and tables containing capital letters
+    create schema xyz;
+    create table xyz."Members"(
+        id int primary key,
+        name text not null
+    );
+    select audit.enable_tracking('xyz."Members"');
+ enable_tracking 
+-----------------
+ 
+(1 row)
+
+    select audit.disable_tracking('xyz."Members"');
+ disable_tracking 
+------------------
+ 
+(1 row)
+
+rollback;
