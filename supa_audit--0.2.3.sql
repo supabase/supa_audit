@@ -33,7 +33,7 @@ create table audit.record_version(
     old_record_id  uuid,
     -- INSERT/UPDATE/DELETE/TRUNCATE/SNAPSHOT
     op             audit.operation not null,
-    ts             timestamptz not null default (now() at time zone 'utc'),
+    ts             timestamptz not null default (now()),
     table_oid      oid not null,
     table_schema   name not null,
     table_name     name not null,
