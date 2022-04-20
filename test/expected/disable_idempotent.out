@@ -22,11 +22,11 @@ NOTICE:  trigger "audit_t" for relation "dummy" does not exist, skipping
  
 (1 row)
 
-    select *
+    select tgname
     from pg_trigger
     where tgrelid = 'public.dummy'::regclass;
- oid | tgrelid | tgparentid | tgname | tgfoid | tgtype | tgenabled | tgisinternal | tgconstrrelid | tgconstrindid | tgconstraint | tgdeferrable | tginitdeferred | tgnargs | tgattr | tgargs | tgqual | tgoldtable | tgnewtable 
------+---------+------------+--------+--------+--------+-----------+--------------+---------------+---------------+--------------+--------------+----------------+---------+--------+--------+--------+------------+------------
+ tgname 
+--------
 (0 rows)
 
 rollback;
