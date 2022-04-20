@@ -6,11 +6,14 @@ jobs:
   test:
 
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        postgres-version: ['14', '13', '12', '11']
 
     steps:
     - uses: actions/checkout@v1
     - uses: cachix/install-nix-action@v13
       with:
         nix_path: nixpkgs=channel:nixos-unstable
-    - name: Run tests
-      run: nix-shell --run "pg_14_supa_audit make installcheck"
+    - name: Run tests pg_${{ matrix.postgres-version }}
+      run: nix-shell --run "pg_${{ matrix.postgres-version }}_supa_audit make installcheck"
