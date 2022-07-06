@@ -16,6 +16,16 @@ The `supa_audit` PostgreSQL extension is a generic solution for tracking changes
 
 The audit table, `audit.record_version`, leverages each records primary key values to produce a stable `record_id::uuid`, enabling efficient (linear time) history queries.
 
+## Cloud Extensibility
+Since the result of this project is a SQL-type extension, it can be easily adapted for PostgreSQL in the cloud (DBaaS). Just download the most recent SQL file (currently, **supa_audit--0.2.3.sql**). Copy this file to a new file and edit it putting this statement line at the top:
+```
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+```
+
+Assuming you saved this file as **supa_audit.sql**, simply import it into your target database:
+```
+psql testingdb < ./supa_audit.sql
+```
 
 ## Usage
 
