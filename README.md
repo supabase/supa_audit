@@ -30,6 +30,9 @@ create table public.account(
 -- Enable auditing
 select audit.enable_tracking('public.account'::regclass);
 
+-- Enable auditing for only a subset of columns
+select audit.enable_selective_tracking('public.account'::regclass, ARRAY['email', 'name']);
+
 -- Insert a record
 insert into public.account(id, name)
 values (1, 'Foo Barsworth');
