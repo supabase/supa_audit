@@ -1,3 +1,4 @@
+-- SPDX-License-Identifier: Apache-2.0
 /*
     Generic Audit Trigger
     Linear Time Record Version History
@@ -29,7 +30,7 @@ create table audit.record_version(
     id             bigserial primary key,
     -- uniquely identifies a record by primary key [primary key + table_oid]
     record_id      uuid,
-    -- uniquely identifies identity of record before update/delete before an update
+    -- uniquely identifies a record before update/delete
     old_record_id  uuid,
     -- INSERT/UPDATE/DELETE/TRUNCATE/SNAPSHOT
     op             audit.operation not null,
@@ -43,7 +44,7 @@ create table audit.record_version(
     -- previous record contents for UPDATE/DELETE
     old_record     jsonb,
 
-    -- at least one of record_id and old_record id is populated, except for trucnates
+    -- at least one of record_id or old_record_id is populated, except for truncates
     check (coalesce(record_id, old_record_id) is not null or op = 'TRUNCATE'),
 
     -- record_id must be populated for insert and update
