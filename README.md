@@ -94,7 +94,7 @@ nix-shell --run "pg_13_supa_audit psql"
 ### Write Throughput
 Auditing tables reduces throughput of inserts, updates, and deletes.
 
-It is not reccomended to enable tracking on tables with a peak write throughput over 3k ops/second.
+It is not recommended to enable tracking on tables with a peak write throughput over 3k ops/second.
 
 
 ### Querying
