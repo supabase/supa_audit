@@ -56,6 +56,10 @@ create table audit.record_version(
     check (op in ('UPDATE', 'DELETE') = (old_record is not null))
 );
 
+-- mark the table as configuration data so it's included in database dumps and can be backed up
+select pg_catalog.pg_extension_config_dump('audit.record_version', '');
+select pg_catalog.pg_extension_config_dump('audit.record_version_id_seq', '');
+
 do $$
     begin
         -- Detect if we're in a supabase project
