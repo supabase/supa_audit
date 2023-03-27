@@ -1,2 +1,2 @@
 -- Anything that needs to be executed prior to every test goes here
-create extension supa_audit cascade version '0.3.0';
+create extension supa_audit cascade version '0.3.1';
