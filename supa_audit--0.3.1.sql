@@ -143,13 +143,7 @@ as $$
             when rec is null then null
             when pkey_cols = array[]::text[] then uuid_generate_v4()
             else (
-                select
-                    uuid_generate_v5(
-                        'fd62bc3d-8d6e-43c2-919c-802ba3762271',
-                        ( jsonb_build_array(to_jsonb($1)) || jsonb_agg($3 ->> key_) )::text
-                    )
-                from
-                    unnest($2) x(key_)
+                (rec->>pkey_cols[1])::uuid
             )
         end
 $$;
